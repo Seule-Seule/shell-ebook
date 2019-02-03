@@ -8,7 +8,7 @@ import csv
 import requests
 from bs4 import BeautifulSoup
 
-def gethtmltext(url):
+def ChaptersRequsts(ChapterUrl):
     
     # 请求头
     headers = {
@@ -18,7 +18,7 @@ def gethtmltext(url):
 
     try:
         # 请求页面
-        r = requests.get(url = url,timeout = 30,headers = headers)
+        r = requests.get(url = ChapterUrl,timeout = 5,headers = headers)
                          
         # 收集错误信息
         r.raise_for_status()
@@ -31,7 +31,7 @@ def gethtmltext(url):
     except:
         return ""
 
-def filllist(html):
+def ChapterList(html):
 
     # 目录文件存储路径
     path = os.getcwd() + os.sep +'ChaptersList.csv'
@@ -64,8 +64,8 @@ def GetChapters(objecturl):
     urllist = []
 
 
-    objecthtml = gethtmltext(objecturl)
-    urllist =  filllist(objecthtml)
+    objecthtml = ChaptersRequsts(objecturl)
+    urllist =  ChapterList(objecthtml)
 
 
 
