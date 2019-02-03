@@ -3,7 +3,6 @@
 # Author : faner
 # Email  : soul.seule@gmail.com
 
-import bs4
 import requests
 from bs4 import BeautifulSoup
 
@@ -29,18 +28,19 @@ def ContentRequests(Contenturl):
     except:
         return ""
 
-def ContentText(html):
+def ContentText(clist,html):
     html_soup  = BeautifulSoup(html,'lxml')
-    Content = html_soup.find('div',{'id':'txtContent'}).prettify()
-
-    return Content
-
+    for Content in html_soup.find('div',{'id':'txtContent'}).children:
+        if type(Content) != type(html_soup.div): 
+            clist.append(Content.string)
 
 def GetContent(url):
 
+    ContentList = []
     ContentHtml = ContentRequests(url)
-    TxtContent  = ContentText(ContentHtml)
-    print(TxtContent)
+    ContentText(ContentList,ContentHtml)
+    
+    return ContentText
 
 if __name__ == '__main__':
 
