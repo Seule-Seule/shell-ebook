@@ -32,10 +32,10 @@ def SearchRequests(key):
     except:
         return ""
 
-def SearchList(slist,shtml):
+def SearchList(shtml):
 
     mlist = []
-    
+    slist = []
 
     Search_soup = BeautifulSoup(shtml,'lxml')
     for li in Search_soup('li',{'class':'list-group-item'}):
@@ -61,12 +61,14 @@ def SearchList(slist,shtml):
 
         slist.append(SearchOne.split(","))
 
+    return slist
+
 
 def Search(SearchKey):
     
     slist = []
     SearchHtml = SearchRequests(SearchKey)
-    SearchList(slist,SearchHtml)
+    slist = SearchList(SearchHtml)
     
     return slist
 

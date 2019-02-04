@@ -69,7 +69,6 @@ def GetChapters(objecturl):
 
 
 
-
 if __name__ == '__main__':
     '''
     GetChapters can get chapters list of book that from objecturl.
