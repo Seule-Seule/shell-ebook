@@ -9,10 +9,7 @@ from BookCraeler.GetContent import GetContent
 
 
 def SearchFun():
-    keyword = input('Please input Keyword : ')
-    SearchList = Search(keyword)
-    for message in SearchList:
-        print(message)
+    Search()
 
 def GetChapterFun():
     url = input('Please input book chapters url : ' )
@@ -37,7 +34,7 @@ def cmd(flag):
     return switch.get(flag,'Error Input !')
 
 def main():
-    print( '<<<' +  '-'*70  +  '>>>' \
+    print( '<<<' +  '-'*25 + '[ 首 页 ]' +  '-'*25  +  '>>>' \
            '\n \t\t Hello , Welocome boquge ! Please goto......\n \
            \n \t\t author : 范儿 \
            \n \t\t Email  : soul.seule@qq.com \
@@ -46,11 +43,11 @@ def main():
            \n \t\t [3] -> 提供章节URL查看内容 \
            \n \t\t [4] -> 退出程序')
     while True:
-        flag = input('\n \t\t Please Choose:')
+        flag = input('\n \t\t[请输入功能键] >>>')
 
         fun = cmd(flag)
         if type(fun) == type('Error Input !'):
-            print(fun)
+            print('\n \t\t' + fun)
         else:
             fun()
 
