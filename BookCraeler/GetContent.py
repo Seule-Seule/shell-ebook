@@ -40,7 +40,7 @@ def GetContent(url):
     ContentHtml = ContentRequests(url)
     ContentText(ContentList,ContentHtml)
     
-    return ContentText
+    return ContentList
 
 if __name__ == '__main__':
 

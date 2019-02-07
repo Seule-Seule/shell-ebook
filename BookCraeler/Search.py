@@ -4,11 +4,10 @@
 # Email  : soul.seule@gmail.com
 
 
-import re
 import requests
 from bs4 import BeautifulSoup
 
-def SearchRequests(key):
+def SearchRequests(key = '道君'):
     
     param = {'keyword':key}
     SearchUrl = 'https://www.boquge.com/search.htm?'
@@ -64,13 +63,15 @@ def SearchList(shtml):
     return slist
 
 
-def Search(SearchKey):
-    
-    slist = []
-    SearchHtml = SearchRequests(SearchKey)
-    slist = SearchList(SearchHtml)
-    
-    return slist
+def Search():
+    while True:
+        slist= []
+
+
+        print("\t\t\t[搜索] \
+              \n\t\t")
+        SearchHtml = SearchRequests(key = SearchKey)
+        slist = SearchList(SearchHtml)
 
 if __name__ == '__main__':
 
