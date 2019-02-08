@@ -12,14 +12,10 @@ def SearchFun():
     Search()
 
 def GetChapterFun():
-    url = input('Please input book chapters url : ' )
-    GetChapters(url)
+    GetChapters()
 
 def GetContentFun():
-    url = input('Pleasr input book content url : ')
-    text = GetContent(url)
-    for paragraph in text:
-        print(paragraph)
+    GetContent()
 
 def cmd(flag):
       
@@ -51,8 +47,8 @@ def main():
         else:
             fun()
 
-        print( '<<<' +  '-'*70  +  '>>>' \
-                '\n \t\t [1] -> 搜索 \
+        print( '<<<' +  '-'*25 + '[ 首 页 ]' +  '-'*25  +  '>>>'
+               '\n \t\t [1] -> 搜索 \
                 \n \t\t [2] -> 提供书本URL链接以查看章节 \
                 \n \t\t [3] -> 提供章节URL查看内容 \
                 \n \t\t [4] -> 退出程序')
