@@ -18,7 +18,7 @@
 
 * /--->Setup.py
 * __|
-* __|->Setup.txt
+* __|->setup.txt
 * __|
 * __|->README.md
 * __|
