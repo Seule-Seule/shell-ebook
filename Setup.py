@@ -3,56 +3,51 @@
 # Author : faner
 # Email  : soul.seule@gmail.com
 
+import os
 from BookCraeler.Search import Search
-from BookCraeler.GetChapter import GetChapters
-from BookCraeler.GetContent import GetContent
+from BookCraeler.Search import Get_Table
+from BookCraeler.Search import Get_Search_One
+from BookCraeler.Chapter import GetChapters
 
-
-def SearchFun():
-    Search()
-
-def GetChapterFun():
-    GetChapters()
-
-def GetContentFun():
-    GetContent()
-
-def cmd(flag):
-      
-
-    switch = {
-        '1':SearchFun,
-        '2':GetChapterFun,
-        '3':GetContentFun,
-        '4':exit
-    }
-
-    return switch.get(flag,'Error Input !')
 
 def main():
-    print( '<<<' +  '-'*25 + '[ 首 页 ]' +  '-'*25  +  '>>>' \
-           '\n \t\t Hello , Welocome boquge ! Please goto......\n \
-           \n \t\t author : 范儿 \
-           \n \t\t Email  : soul.seule@qq.com \
-           \n \t\t [1] -> 搜索 \
-           \n \t\t [2] -> 提供书本URL链接以查看章节 \
-           \n \t\t [3] -> 提供章节URL查看内容 \
-           \n \t\t [4] -> 退出程序')
-    while True:
-        flag = input('\n \t\t[请输入功能键] >>>')
+    if os.sep == '/':
+        clean = 'clear'
+    else:
+        clean = 'cls'
 
-        fun = cmd(flag)
-        if type(fun) == type('Error Input !'):
-            print('\n \t\t' + fun)
-        else:
-            fun()
-
-        print( '<<<' +  '-'*25 + '[ 首 页 ]' +  '-'*25  +  '>>>'
-               '\n \t\t [1] -> 搜索 \
-                \n \t\t [2] -> 提供书本URL链接以查看章节 \
-                \n \t\t [3] -> 提供章节URL查看内容 \
-                \n \t\t [4] -> 退出程序')
+    os.system(clean)  # 清除屏幕
+    os.system(r'echo  "\033[?25l"') # 隐藏光标 
     
+    Bar = ['[ Home ]','','','']
+
+    Print_Bar =  "\n" + "%s>%s>%s>%s"
+
+    Print_Help = "\n\tNumber -> Enter recommendation. \
+                  \n\t  s    -> Enter Serach. \
+                  \n\t  q    -> Enter exit."
+
+    while True:
+        
+        while True:
+
+            Default_Page = Get_Table('道君',0)
+            os.system(clean)
+            print(Default_Page)
+            print(Print_Help)
+            print(Print_Bar % (Bar[0],Bar[1],Bar[2],Bar[3]),end = '')
+            cmd = input()
+            if cmd.isdigit():
+                Choose = Get_Search_One('道君',int(cmd))
+                GetChapters(Choose[5])
+            elif cmd == 's':
+                    Search()
+            elif cmd == 'q':
+                os.system(clean)
+                os.system(r'echo  "\033[?25h"')
+                exit()
+
+
 if __name__ == '__main__':
 
     main()

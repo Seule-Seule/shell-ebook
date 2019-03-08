@@ -7,6 +7,8 @@ import os
 import csv
 import requests
 from bs4 import BeautifulSoup
+from prettytable import PrettyTable
+from .Chapter import GetChapters
 
 def SearchRequests(key = '道君'):
     
@@ -17,7 +19,11 @@ def SearchRequests(key = '道君'):
     headers = {
         'User-Agent':'Mozilla/5.0(Linux;X11)'
     }
+    
+
+    WhileEnd = 0
     while True:
+        WhileEnd += 1
         try:
             # 请求页面 
             r = requests.get(url = SearchUrl,params = param,timeout = 5,headers = headers)
@@ -32,7 +38,10 @@ def SearchRequests(key = '道君'):
             if r.status_code == 200:
                 return r.text
         except:
-            print('\n \t\t[页面请求错误，正在尝试重新请求 ！]')
+            continue
+        
+        if WhileEnd == 4:
+            break
 
 def SearchList(shtml):
 
@@ -43,6 +52,7 @@ def SearchList(shtml):
     for li in Search_soup('li',{'class':'list-group-item'}):
         mlist.append(li)
 
+    index = 0
     for i in mlist[:-1]:
         s = BeautifulSoup(str(i),'lxml')
         brand = s.find('div',{'class':'col-xs-1'})
@@ -54,75 +64,119 @@ def SearchList(shtml):
             BookUrl = 'https://www.boquge.com/book/' + href[4:-10]
 
         except:
-            BookUrl = '链接信息'
+            BookUrl = '目录页链接'
 
-
-        SearchOne = str(name.string) + ',' + \
-                          str(auother.string) + ','+ \
-                          str(brand.string) + ','+ \
-                          str(new.string) + ','+ \
-                          BookUrl
+          
+        SearchOne = str(index) + ',' + str(name.string) + ',' + \
+                    str(auother.string) + ','+ str(brand.string) + ','+ \
+                    str(new.string) + ','+ BookUrl
 
         slist.append(SearchOne.split(","))
 
+        index += 1
+
     return slist
+        
+def Get_Table(key,Search_Page):
+    SearchHtml = SearchRequests(key = key)
+    slist = SearchList(SearchHtml)
+    
+    slist_History = slist
 
-def Displiay(string,length = 0):
-    if length == 0:
-        return string
-    slen = len(string)
-    re = string
-    if isinstance(string, str):
-        placeholder = u'  '
-    else:
-        placeholder = ' '
-    while slen < length:
-        re += placeholder
-        slen += 1
+    tb = PrettyTable()
+    SearchNumber = 0
+    for i in slist:
+        if SearchNumber == 0:
+            i[0] = '推荐'
+            if Search_Page == 1:
+                i[0] = '搜索'
+            tb.field_names = i
+            SearchNumber += 1
+            continue
 
-    return re
+        tb.add_row(i)
+        SearchNumber += 1
+        if SearchNumber == 35:
+            break
+    if SearchNumber < 35:
+        for i in slist_History:
+            if i[0] == '推荐' or i[0] == '搜索':
+                continue
+            SearchNumber += 1
+            i[0] = SearchNumber
+            tb.add_row(i)
+            if SearchNumber == 35:
+                break
+    return tb
+
+def Get_Search_One(key,flag):
+    number = 1
+    SearchHtml = SearchRequests(key = key)
+    slist = SearchList(SearchHtml)
+    for i in slist:
+        if (number -1 ) == flag:
+            return i
+        number += 1
+
+
 
 def Search():
-    path = os.getcwd() + os.sep + 'Search.csv'
-    if os.path.isfile('Search.csv'):
-        os.remove(path)
+
+    if os.sep == '/':
+        clean = 'clear'
+    else:
+        clean = 'cls'
+
+    os.system(clean)
+
+    Bar = ['[ Home ]','[ Search ]','','']                # Search Commend
+    
+    Print_Bar =  "\n" + "%s>%s>%s>%s"
+
+    Print_Help = '\n\tNumber -> Enter recommendation. \
+                  \n\t  q    -> Enter exit. \
+                  \n\t'
 
     while True:
 
-        print('<<<' +  '-'*25 + '[ 搜 索 ]' +  '-'*25  +  '>>>' \
-              "\n \t\t [1] -> 输入搜索作者/书名 \
-              \n \t\t [2] -> 退出搜索 ")
-        flag = input('\n \t\t[请输入功能键] >>>')
-        if flag == '2':
-            return 
 
-        SearchKey = input("\n \t\t[请输入关键字] >>>")
+        while True:
 
-        SearchHtml = SearchRequests(key = SearchKey)
-        slist = SearchList(SearchHtml)
+            Bar[2] = ''
+            Bar[3] = ''
+            Default_Page = Get_Table('道君',0)
+            os.system(clean)
+            print(Default_Page)
+            print(Print_Help)
+            print(Print_Bar % (Bar[0],Bar[1],Bar[2],Bar[3]),end = '')            
+            cmd = input()
+            if cmd.isdigit():
+                Choose = Get_Search_One('道君',int(cmd))
+                GetChapters(Choose[5]) 
+            elif cmd == 'q':
+                return
+            else:
+                SearchKey = cmd
+                Bar[2] = '[ ' + SearchKey + ' ]'
+                break
+         
         
-        SearchNumber = 0
+        Chapter_number = 1
+        Search_Table = Get_Table(SearchKey,1)
 
-        for i in slist:
-            
-            SearchNumber += 1
-            print("|%-3s|%-s|%-s|%-s|%-s" 
-                %(SearchNumber
-                , Displiay(i[0],10) 
-                , Displiay(i[1],8) 
-                , Displiay(i[2],4)
-                , Displiay(i[3],15)))
-           
+        os.system(clean)
+        print(Search_Table)
+        print(Print_Help)
+        print(Print_Bar % (Bar[0],Bar[1],Bar[2],Bar[3]),end = '')
+        while True:
+            cmd = input()
+            if cmd == 'q':
+                break
+            elif cmd.isdigit():
+                Choose = Get_Search_One(SearchKey,int(cmd))
+                GetChapters(Choose[5])
 
-            with open(path,'a',newline='') as search:
-                writer = csv.writer(search)
-                writer.writerow(i[0].split('\n') \
-                                + i[1].split('\n')  \
-                                + i[2].split('\n') \
-                                + i[3].split('\n') \
-                                + i[4].split('\n') ) 
-                
-        print("\n \t\t共搜索到" + str(SearchNumber) + "条结果 ！\n\n")
+
 
 if __name__ == '__main__':
 

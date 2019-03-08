@@ -3,8 +3,10 @@
 # Author : faner
 # Email  : soul.seule@gmail.com
 
+import os
 import requests
 from bs4 import BeautifulSoup
+#from prettytable import PrettyTable
 
 
 def ContentRequests(Contenturl):
@@ -13,7 +15,10 @@ def ContentRequests(Contenturl):
     headers = {
         'User-Agent':'Mozilla/5.0(Linux;X11)'
     }
+
+    WhileEnd = 0
     while True:
+        WhileEnd += 1
         try:
             # 请求页面
             r = requests.get(url = Contenturl,timeout = 5,headers = headers)
@@ -28,7 +33,9 @@ def ContentRequests(Contenturl):
             if r.status_code == 200:
                 return r.text
         except:
-            print('\n \t\t[页面请求错误，正在尝试重新请求 ！]')
+            continue 
+        if WhileEnd == 4:
+            break
 
 def ContentText(html):
     clist = []
@@ -39,24 +46,42 @@ def ContentText(html):
     
     return clist
 
-def GetContent():
+def GetTable(Url):
+    ContentList = []
+    ContentHtml = ContentRequests(Url)
+    ContentList =  ContentText(ContentHtml)
+    number = 1   
+    for i in ContentList:
+        number += 1
+        print(i)
+        if number == 30:
+            break
+    return
+
+def GetContent(BookName,BookUrl):
+    if os.sep == '/':
+        clean = 'clear'
+    else:
+        clean = 'cls'
+    os.system(clean)
+    Bar = ['[ Home  ]','[ '+BookName+' ]','','']
+    Print_Bar =  "\n" + "%s>%s>%s>%s"
+    Print_Help = '\n\tNumber -> Enter recommendation. \
+            \n\t  q    -> Enter exit. \
+            \n\t'
     while True:
-        
-        print('<<<' +  '-'*25 + '[ 内 容 ]' +  '-'*25  +  '>>>' \
-             "\n \t\t [1] -> 输入内容URL链接 \
-              \n \t\t [2] -> 退出内容查看 ")
-        flag = input('\n \t\t[请输入功能键] >>>')
-        if flag == '2':
+    
+        os.system(clean)
+        GetTable(BookUrl)
+        print(Print_Help)
+        print(Print_Bar % (Bar[0],Bar[1],Bar[2],Bar[3]),end = '')
+        cmd = input()
+        if cmd == 'q':
             return
+        else:
+            continue
 
-        url = input("\n \t\t[请输入内容链接] >>>")
 
-        ContentList = []
-        ContentHtml = ContentRequests(url)
-        ContentList =  ContentText(ContentHtml)
-        
-        for i in ContentList:
-            print(i)
 
 if __name__ == '__main__':
 
