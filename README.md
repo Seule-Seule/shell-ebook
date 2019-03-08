@@ -16,31 +16,31 @@
 
 ## 文件目录
 
-/--->Setup.py
+* /--->Setup.py
 
-__|
+* __|
 
-__|->Setup.txt
+* __|->Setup.txt
 
-__|
+* __|
 
-__|->README.md
+* __|->README.md
 
-__|
+* __|
 
-__|->LICENSE
+* __|->LICENSE
 
-__|
+* __|
 
-__|->BookCraeler->Search.py
+* __|->BookCraeler->Search.py
 
-_______________|
+* _______________|
 
-_______________-->Chapter.py
+* _______________-->Chapter.py
 
-_______________|
+* _______________|
 
-_______________-->GetContent.py
+* _______________-->GetContent.py
 
 ## 使用方法
 
